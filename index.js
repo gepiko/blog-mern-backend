@@ -2,11 +2,12 @@ import express from 'express'
 
 import mongoose from 'mongoose'
 
-import { registerValidation } from './validations/auth.js'
+import { registerValidation, postCreateValidation } from './validations.js'
 
 import checkAuth from './utils/checkAuth.js'
 
 import * as UserController from './controllers/UserController.js'
+import * as PostController from './controllers/PostController.js'
 
 mongoose
   .connect('mongodb+srv://admin:wwwwww@cluster0.yhle91f.mongodb.net/blog?retryWrites=true&w=majority')
@@ -20,6 +21,12 @@ app.use(express.json())
 app.post('/auth/login', UserController.login)
 app.post('/auth/register', registerValidation, UserController.register)
 app.get('/auth/me', checkAuth, UserController.getMe)
+
+// app.get('/posts', PostController.All)
+// app.get('/posts/:id', PostController.getOne)
+app.post('/posts', checkAuth, postCreateValidation, PostController.create)
+// app.delete('/posts', checkAuth, PostController.remove)
+// app.patch('/posts', PostController.update)
 
 app.listen(4444, (err) => {
   if (err) {
